@@ -4,6 +4,9 @@
 # Author(s):  Admin9705
 # GNU:        General Public License v3.0
 ################################################################################
+declare YELLOW='\033[0;33m'
+declare NC='\033[0m'
+
 runningcheck() {
   initial2
   runcheck5=$(docker ps | grep ${program_var})
@@ -214,10 +217,11 @@ buildup2() {
 backup_all_start() {
 
   while read p; do
-    echo " Vault - Backing Up: $p"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo -e "🚀 Vault - Backing up ${YELLOW}\"$p\"${NC}"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
     sleep 2.5
-    clear_lines 1
 
     # Store Used Program
     echo $p >/tmp/program_var
@@ -231,10 +235,11 @@ backup_all_start() {
 
 backup_start() {
   while read p; do
-    echo "Vault - Backing Up: $p"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo -e "🚀 Vault - Backing up ${YELLOW}\"$p\"${NC}"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
     sleep 2.5
-    clear_lines 1
 
     # Store Used Program
     echo $p >/tmp/program_var
@@ -307,10 +312,10 @@ vfs_c="2"
 	--drive-chunk-size="$vfs_dcs" \
 	--user-agent="$useragent" 1>/dev/null 2>&1
 
-##### Remove File Incase
+  ##### Remove File Incase
   rm -rf ${tarlocation}/${program_var}.tar 1>/dev/null 2>&1
   clear_lines 1
-  echo "✅ \"$program_var\" has been backed up to Google Drive"
+  echo "✅ Application backup completed"
 }
 ######################################################## END - PG Vault Backup
 #
