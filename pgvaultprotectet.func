@@ -283,13 +283,13 @@ backup_process() {
   echo "↘️  Sending Zipped Data to Google Drive - $program_var [ Protected APPS ]"
 
 # User specifying  VARS
-useragent="$(cat /var/plexguide/uagent)"
-bwlimit="$(cat /var/plexguide/blitz.bw)"
+useragent="$(cat /var/plexguide/uagent 1>/dev/null 2>&1)"
+bwlimit="$(cat /var/plexguide/blitz.bw 1>/dev/null 2>&1)"
 
-vfs_dcs="$(cat /var/plexguide/vfs_dcs)"
-vfs_mt="$(cat /var/plexguide/vfs_mt)"
-vfs_t="$(cat /var/plexguide/vfs_t)"
-vfs_c="$(cat /var/plexguide/vfs_c)"
+vfs_dcs="$(cat /var/plexguide/vfs_dcs 1>/dev/null 2>&1)"
+vfs_mt="$(cat /var/plexguide/vfs_mt 1>/dev/null 2>&1)"
+vfs_t="$(cat /var/plexguide/vfs_t 1>/dev/null 2>&1)"
+vfs_c="$(cat /var/plexguide/vfs_c 1>/dev/null 2>&1)"
 
 
   rclone --config /opt/appdata/plexguide/rclone.conf mkdir gdrive:/plexguide/backup/${server_id}/protected/ 1>/dev/null 2>&1
@@ -305,13 +305,12 @@ vfs_c="$(cat /var/plexguide/vfs_c)"
 	--fast-list \
 	--bwlimit="$bwlimit" \
 	--drive-chunk-size="$vfs_dcs" \
-	--user-agent="$useragent" \
-  | cut -b1-$(tput cols) | sed -u 'i\\o033[2K' | stdbuf -o0 tr '\n' '\r'; echo
+	--user-agent="$useragent" 1>/dev/null 2>&1
 
   ##### Remove File Incase
   rm -rf ${tarlocation}/${program_var}.tar.gz 1>/dev/null 2>&1
-  clear_lines 2
-  echo "\"$program_var\" has been backed up to Google Drive"
+  clear_lines 1
+  echo "✅ \"$program_var\" has been backed up to Google Drive"
 }
 ######################################################## END - PG Vault Backup
 #

@@ -284,7 +284,7 @@ backup_process() {
   ###### Backing Up Files to GDrive
   echo "↘️  Sending Zipped Data to Google Drive - $program_var"
 
-useragent="$(cat /var/plexguide/uagent)"
+useragent="$(cat /var/plexguide/uagent 1>/dev/null 2>&1)"
 bwlimit="off"
 
 vfs_dcs="64M"
@@ -305,13 +305,12 @@ vfs_c="2"
 	--fast-list \
 	--bwlimit="$bwlimit" \
 	--drive-chunk-size="$vfs_dcs" \
-	--user-agent="$useragent" \
-  | cut -b1-$(tput cols) | sed -u 'i\\o033[2K' | stdbuf -o0 tr '\n' '\r'; echo
+	--user-agent="$useragent" 1>/dev/null 2>&1
 
 ##### Remove File Incase
   rm -rf ${tarlocation}/${program_var}.tar 1>/dev/null 2>&1
-  clear_lines 2
-  echo "\"$program_var\" has been backed up to Google Drive"
+  clear_lines 1
+  echo "✅ \"$program_var\" has been backed up to Google Drive"
 }
 ######################################################## END - PG Vault Backup
 #
