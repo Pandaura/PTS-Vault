@@ -315,7 +315,9 @@ vfs_c="2"
   ##### Remove File Incase
   rm -rf ${tarlocation}/${program_var}.tar 1>/dev/null 2>&1
   clear_lines 1
-  echo "✅ Application backup completed"
+  tar_file_size=$(du -h ${tarlocation}/${program_var}.tar | awk '{print $1}')
+  echo "✅ Application backup completed"$'\t\t\t'"${tar_file_size}"
+  echo
 }
 ######################################################## END - PG Vault Backup
 #
