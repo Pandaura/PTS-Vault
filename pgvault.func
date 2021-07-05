@@ -40,10 +40,9 @@ initial2() {
 }
 
 final() {
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo
   read -p '✅ Process Complete! | PRESS [ENTER] ' typed </dev/tty
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  clear_lines 3
+  clear_lines 2
   bash /opt/pgvault/pgvault.sh
   exit
 }
@@ -215,12 +214,10 @@ buildup2() {
 backup_all_start() {
 
   while read p; do
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo " Vault - Backing Up: $p"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
     sleep 2.5
-    clear_lines 3
+    clear_lines 1
 
     # Store Used Program
     echo $p >/tmp/program_var
@@ -234,12 +231,10 @@ backup_all_start() {
 
 backup_start() {
   while read p; do
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "Vault - Backing Up: $p"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
     sleep 2.5
-    clear_lines 3
+    clear_lines 1
 
     # Store Used Program
     echo $p >/tmp/program_var
@@ -256,19 +251,15 @@ backup_process() {
   ##### Stop Docker Container if Running
   runningcheck
   if [[ "$running" == "1" ]]; then
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "↘️  Stopping Docker Container - $program_var"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
     sleep 1
     docker stop $program_var 1>/dev/null 2>&1
-    clear_lines 3
+    clear_lines 1
   fi
 
   ###### Start the Backup Process - Backup Locally First
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo "↘️  Zipping Data Locally - $program_var"
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   path=$(cat /var/plexguide/server.hd.path)
   tarlocation=$(cat /var/plexguide/data.location)
@@ -280,22 +271,18 @@ backup_process() {
     -C /opt/appdata/${program_var} -cvf ${tarlocation}/${program_var}.tar ./ \
     | cut -b1-$(tput cols) | sed -u 'i\\o033[2K' | stdbuf -o0 tr '\n' '\r'; echo
   
-  clear_lines 4
+  clear_lines 2
 
   ##### Restart Docker Application if was Running Prior
   if [[ "$running" == "1" ]]; then
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "↘️  Restarting Docker Application - $program_var"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     sleep 2
     docker restart $program_var 1>/dev/null 2>&1
-    clear_lines 3
+    clear_lines 1
   fi
 
   ###### Backing Up Files to GDrive
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo "↘️  Sending Zipped Data to Google Drive - $program_var"
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 useragent="$(cat /var/plexguide/uagent)"
 bwlimit="off"
@@ -322,8 +309,9 @@ vfs_c="2"
   | cut -b1-$(tput cols) | sed -u 'i\\o033[2K' | stdbuf -o0 tr '\n' '\r'; echo
 
 ##### Remove File Incase
-rm -rf ${tarlocation}/${program_var}.tar 1>/dev/null 2>&1
-clear_lines 4
+  rm -rf ${tarlocation}/${program_var}.tar 1>/dev/null 2>&1
+  clear_lines 2
+  echo "\"$program_var\" has been backed up to Google Drive"
 }
 ######################################################## END - PG Vault Backup
 #
@@ -331,12 +319,10 @@ clear_lines 4
 restore_all_start() {
 
   while read p; do
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "Vault - Restoring: $p"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
     sleep 2.5
-    clear_lines 3
+    clear_lines 1
 
     # Store Used Program
     echo $p >/tmp/program_var
@@ -352,12 +338,10 @@ restore_all_start() {
 restore_start() {
 
   while read p; do
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "Vault - Restoring: $p"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
     sleep 2.5
-    clear_lines 3
+    clear_lines 1
 
     # Store Used Program
     echo $p >/tmp/program_var
@@ -372,19 +356,15 @@ restore_start() {
 restore_process() {
   initial2
   srecall=$(cat /tmp/server.select)
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo "↘️  Determining Initial File Size - $program_var"
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   size=$(du -sh --apparent-size /mnt/gdrive/plexguide/backup/${srecall}/${program_var}.tar | /usr/bin/awk '{print $1}')
   sleep 2
   echo "Initial File Size: $size"
   sleep 2
-  clear_lines 4
+  clear_lines 2
 
   ###### Backing Up Files to GDrive
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo "↘️  Downloading Data From Google Drive - $program_var"
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   rclone --config /opt/appdata/plexguide/rclone.conf --stats-one-line \
     --stats 1s --progress \
@@ -395,18 +375,14 @@ restore_process() {
   ##### Stop Docker Container if Running
   runningcheck
   if [ "$running" == "1" ]; then
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "↘️  Stopping Docker Container - $program_var"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     sleep 1
     docker stop $program_var 1>/dev/null 2>&1
-    clear_lines 3
+    clear_lines 1
   fi
 
   ###### Start the Backup Process - Backup Locally First
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo "↘️  UnZipping & Restoring Data - $program_var"
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   mkdir -p "/opt/appdata/${program_var}"
   rm -rf "/opt/appdata/${program_var}/*"
@@ -426,12 +402,10 @@ restore_process() {
 
   ##### Restart Docker Application if was Running Prior
   if [[ "$running" == "1" ]]; then
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "↘️  Restarting Docker Application - $program_var"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     sleep 2
     docker restart $program_var 1>/dev/null 2>&1
-    clear_lines 3
+    clear_lines 1
   fi
 
   ##### Remove File Incase
