@@ -6,6 +6,9 @@
 ################################################################################
 declare YELLOW='\033[0;33m'
 declare NC='\033[0m'
+declare total_size_in_bytes=0
+declare total_program=0
+declare program_number=0
 
 runningcheck() {
   initial2
@@ -43,9 +46,10 @@ initial2() {
 }
 
 final() {
+  total_size_readable=$(numfmt --to=iec --suffix=B $total_size_in_bytes)
   echo
-  read -p '✅ Process Complete! | PRESS [ENTER] ' typed </dev/tty
-  clear_lines 2
+  echo "All backup complete"$'\t\t\t'"${total_size_readable}"
+  read -p '' typed </dev/tty
   bash /opt/pgvault/pgvault.sh
   exit
 }
@@ -215,12 +219,17 @@ buildup2() {
 ######################################################## START - PG Vault Backup
 
 backup_all_start() {
-
+  total_size_in_bytes=0
+  program_number=0
+  total_program=$(wc -l < /var/plexguide/pgvault.apprecall)
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "🚀  Vault backup start..."
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  line_above=2
   while read p; do
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo -e "🚀 Vault - Backing up ${YELLOW}\"$p\"${NC}"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
+    change_line_text $line_above "🚀  Vault in now backing up ${YELLOW}\"$p\"${NC}"
+    let line_above+=1
+    let program_number+=1
     sleep 2.5
 
     # Store Used Program
@@ -234,11 +243,17 @@ backup_all_start() {
 }
 
 backup_start() {
+  total_size_in_bytes=0
+  program_number=0
+  total_program=$(wc -l < /var/plexguide/pgvault.buildup)
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "🚀  Vault backup start..."
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  line_above=2
   while read p; do
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo -e "🚀 Vault - Backing up ${YELLOW}\"$p\"${NC}"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
+    change_line_text $line_above "🚀  Vault in now backing up ${YELLOW}\"$p\"${NC}"
+    let line_above+=1
+    let program_number+=1
     sleep 2.5
 
     # Store Used Program
@@ -312,12 +327,15 @@ vfs_c="2"
 	--drive-chunk-size="$vfs_dcs" \
 	--user-agent="$useragent" 1>/dev/null 2>&1
 
+  # Show completed
+  clear_lines 1
+  tar_file_size_bytes=$(wc -c < ${tarlocation}/${program_var}.tar)
+  let total_size_in_bytes+=tar_file_size_bytes
+  tar_file_size_readable=$(du -h ${tarlocation}/${program_var}.tar | awk '{print $1}')
+  echo "✅  ${program_var} backup complete"$'\t\t\t'"${tar_file_size_readable}"$'\t'"Backup ${program_number}/${total_program}"
+
   ##### Remove File Incase
   rm -rf ${tarlocation}/${program_var}.tar 1>/dev/null 2>&1
-  clear_lines 1
-  tar_file_size=$(du -h ${tarlocation}/${program_var}.tar | awk '{print $1}')
-  echo "✅ Application backup completed"$'\t\t\t'"${tar_file_size}"
-  echo
 }
 ######################################################## END - PG Vault Backup
 #
@@ -572,10 +590,21 @@ restorecheck() {
   fi
 }
 
-## Clear output text for n lines ($1 args)
+## Clear output text for n lines (arg $1)
 clear_lines() {
   for (( i=1; i <= $(($1)); i++ ));do
     tput cuu1
     tput el
   done
+}
+
+## Change text in n lines above (arg $1) with string (arg $2)
+change_line_text() {
+  tput sc
+  for (( i=1; i <= $(($1)); i++ ));do
+    tput cuu1
+  done
+  tput el
+  echo -e $2
+  tput rc
 }
