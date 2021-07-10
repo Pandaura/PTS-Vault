@@ -223,7 +223,7 @@ backup_all_start() {
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     line_above=2
     while read p; do
-        change_line_text $line_above "🚀  Vault in now backing up ${YELLOW}\"$p\"${NC}"
+        change_line_text $line_above "🚀  Vault is now backing up ${YELLOW}\"$p\"${NC}"
         let line_above+=1
         let program_number+=1
         sleep 2.5
@@ -247,7 +247,7 @@ backup_start() {
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     line_above=2
     while read p; do
-        change_line_text $line_above "🚀  Vault in now backing up ${YELLOW}\"$p\"${NC}"
+        change_line_text $line_above "🚀  Vault is now backing up ${YELLOW}\"$p\"${NC}"
         let line_above+=1
         let program_number+=1
         sleep 2.5
