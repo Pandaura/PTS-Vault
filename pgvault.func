@@ -56,7 +56,7 @@ final() {
 
 queued() {
     echo
-    read -p "⚠️ ERROR - $typed Already queued! | Press [ENTER] " typed </dev/tty
+    read -p "⚠️ ERROR - $typed is already queued! | Press [ENTER] " typed </dev/tty
     clear_lines 2
 }
 
@@ -154,18 +154,17 @@ serverprime() {
     
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔒 Vault ~ Server Recall
+🔒 Vault ~ Server recall
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📂 Current [${server_id}] & prior servers detected:
 
 $servers
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[Z] Exit
+__________________________________________________________________________
+                                                                 [Z] Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-    read -p '🌍 Type server name | Press [ENTER]: ' server </dev/tty
+    read -p '💬 Type server name | Press [ENTER]: ' server </dev/tty
     clear_lines 12
     echo $server >/tmp/server.select
     
@@ -251,7 +250,7 @@ backup_start() {
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     line_above=2
     while read p; do
-        change_line_text $line_above "⬆️  Vault in now backing up ${YELLOW}\"$p\"${NC}"
+        change_line_text $line_above "⬆️  Vault is now backing up ${YELLOW}\"$p\"${NC}"
         let line_above+=1
         let program_number+=1
         sleep 2.5
@@ -271,7 +270,7 @@ backup_process() {
     ##### Stop Docker Container if Running
     runningcheck
     if [[ "$running" == "1" ]]; then
-        echo "🛑  Stopping Docker Container - $program_var"
+        echo "🛑  Stopping Docker container - $program_var"
         
         sleep 1
         docker stop $program_var 1>/dev/null 2>&1
@@ -295,14 +294,14 @@ backup_process() {
     
     ##### Restart Docker Application if was Running Prior
     if [[ "$running" == "1" ]]; then
-        echo "🔄  Restarting Docker Application - $program_var"
+        echo "🔄  Restarting Docker application - $program_var"
         sleep 2
         docker restart $program_var 1>/dev/null 2>&1
         clear_lines 1
     fi
     
     ###### Backing Up Files to GDrive
-    echo "⬆️  Sending Zipped Data to Google Drive - $program_var"
+    echo "⬆️  Sending zipped data to Google Drive - $program_var"
     
     useragent="$(cat /var/plexguide/uagent 1>/dev/null 2>&1)"
     bwlimit="off"
@@ -449,17 +448,15 @@ vaultbackup() {
 🔒 Vault ~ Data Storage
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📂 App Data available to Backup
+📂 App data available to backup
 
 $notrun
-
-💾 Apps Queued for Backup
+--------------------------------------------------------------------------
+💾 Apps queued for backup
 
 $buildup
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[A] Backup
-[Z] Exit
+__________________________________________________________________________
+[A] Backup                                                       [Z] Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
     read -p '🌍 Type APP for QUEUE | Type 'all' to backup all apps | Press [ENTER]: ' typed </dev/tty
@@ -497,17 +494,15 @@ vaultrestore() {
 🔒 Vault ~ Data Recall
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📂 App Data available to Restore
+📂 App data available to restore
 
 $notrun
-
-💾 Apps Queued for Restore
+--------------------------------------------------------------------------
+💾 Apps queued for restore
 
 $buildup
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[A] Restore
-[Z] Exit
+__________________________________________________________________________
+[A] Restore                                                       [Z] Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
     read -p '🌍 Type APP for QUEUE | Type 'all' to restore all apps | Press [ENTER]: ' typed </dev/tty
@@ -544,10 +539,10 @@ Used disk space: $used of $capacity | $percentage Used Capacity
 
 [1] Backup your data
 [2] Restore your data
-[3] Change Server ID                    | Current Server ID : $server_id
-[4] Processing Location                 | Current location : $tarlocation
+[3] Change Server ID                    | Current Server ID : $(echo -e ${NF}$server_id${NC})
+[4] Processing location                 | Current location : $tarlocation
 __________________________________________________________________________
-[Z] Exit
+                                                                  [Z] Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
     read -p 'Type a number | Press [ENTER]: ' typed </dev/tty
