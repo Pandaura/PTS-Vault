@@ -48,7 +48,7 @@ initial2() {
 final() {
     total_size_readable=$(numfmt --to=iec --suffix=B $total_size_in_bytes)
     echo
-    echo "All backup complete"$'\t\t\t'"${total_size_readable}"
+    echo "All backups complete"$'\t\t\t'"${total_size_readable}"
     read -p '' typed </dev/tty
     bash /opt/pgvault/pgvault.sh
     exit
@@ -56,13 +56,13 @@ final() {
 
 queued() {
     echo
-    read -p "⛔️ ERROR - $typed Already Queued! | Press [ENTER] " typed </dev/tty
+    read -p "⚠️ ERROR - $typed Already queued! | Press [ENTER] " typed </dev/tty
     clear_lines 2
 }
 
 badserver() {
     echo
-    read -p '⛔️ ERROR - Type an Exact Server Name | Press [ENTER] ' typed </dev/tty
+    read -p '⚠️ ERROR - Type an exact server name | Press [ENTER] ' typed </dev/tty
     clear_lines 2
 }
 
@@ -154,10 +154,10 @@ serverprime() {
     
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 Vault ~ Server Recall
+🔒 Vault ~ Server Recall
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📂 Current [${server_id}] & Prior Servers Detected:
+📂 Current [${server_id}] & prior servers detected:
 
 $servers
 
@@ -165,7 +165,7 @@ $servers
 [Z] Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-    read -p '🌍 Type Server Name | Press [ENTER]: ' server </dev/tty
+    read -p '🌍 Type server name | Press [ENTER]: ' server </dev/tty
     clear_lines 12
     echo $server >/tmp/server.select
     
@@ -223,11 +223,11 @@ backup_all_start() {
     program_number=0
     total_program=$(wc -l < /var/plexguide/pgvault.apprecall)
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "🚀  Vault backup start..."
+    echo "⬆️  Vault backup start..."
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     line_above=2
     while read p; do
-        change_line_text $line_above "🚀  Vault in now backing up ${YELLOW}\"$p\"${NC}"
+        change_line_text $line_above "🔒  Vault in now backing up ${YELLOW}\"$p\"${NC}"
         let line_above+=1
         let program_number+=1
         sleep 2.5
@@ -247,11 +247,11 @@ backup_start() {
     program_number=0
     total_program=$(wc -l < /var/plexguide/pgvault.buildup)
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "🚀  Vault backup start..."
+    echo "⬆️  Vault backup start..."
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     line_above=2
     while read p; do
-        change_line_text $line_above "🚀  Vault in now backing up ${YELLOW}\"$p\"${NC}"
+        change_line_text $line_above "⬆️  Vault in now backing up ${YELLOW}\"$p\"${NC}"
         let line_above+=1
         let program_number+=1
         sleep 2.5
@@ -271,7 +271,7 @@ backup_process() {
     ##### Stop Docker Container if Running
     runningcheck
     if [[ "$running" == "1" ]]; then
-        echo "↘️  Stopping Docker Container - $program_var"
+        echo "🛑  Stopping Docker Container - $program_var"
         
         sleep 1
         docker stop $program_var 1>/dev/null 2>&1
@@ -295,14 +295,14 @@ backup_process() {
     
     ##### Restart Docker Application if was Running Prior
     if [[ "$running" == "1" ]]; then
-        echo "↘️  Restarting Docker Application - $program_var"
+        echo "🔄  Restarting Docker Application - $program_var"
         sleep 2
         docker restart $program_var 1>/dev/null 2>&1
         clear_lines 1
     fi
     
     ###### Backing Up Files to GDrive
-    echo "↘️  Sending Zipped Data to Google Drive - $program_var"
+    echo "⬆️  Sending Zipped Data to Google Drive - $program_var"
     
     useragent="$(cat /var/plexguide/uagent 1>/dev/null 2>&1)"
     bwlimit="off"
@@ -399,7 +399,7 @@ restore_process() {
     ##### Stop Docker Container if Running
     runningcheck
     if [ "$running" == "1" ]; then
-        echo "↘️  Stopping Docker Container - $program_var"
+        echo "🛑  Stopping Docker Container - $program_var"
         sleep 1
         docker stop $program_var 1>/dev/null 2>&1
         clear_lines 1
@@ -426,7 +426,7 @@ restore_process() {
     
     ##### Restart Docker Application if was Running Prior
     if [[ "$running" == "1" ]]; then
-        echo "↘️  Restarting Docker Application - $program_var"
+        echo "🔄  Restarting Docker Application - $program_var"
         sleep 2
         docker restart $program_var 1>/dev/null 2>&1
         clear_lines 1
@@ -446,7 +446,7 @@ vaultbackup() {
     if [[ "$buildup" == "" ]]; then buildup="NONE"; fi
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 Vault ~ Data Storage
+🔒 Vault ~ Data Storage
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📂 App Data available to Backup
@@ -462,7 +462,7 @@ $buildup
 [Z] Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-    read -p '🌍 Type APP for QUEUE | Type all to backup all apps | Press [ENTER]: ' typed </dev/tty
+    read -p '🌍 Type APP for QUEUE | Type 'all' to backup all apps | Press [ENTER]: ' typed </dev/tty
     clear_lines 17
     
     if [[ "$typed" == "all" || "$typed" == "All" || "$typed" == "ALL" ]]; then
@@ -494,7 +494,7 @@ vaultrestore() {
     if [ "$buildup" == "" ]; then buildup="NONE"; fi
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 Vault ~ Data Recall
+🔒 Vault ~ Data Recall
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📂 App Data available to Restore
@@ -510,7 +510,7 @@ $buildup
 [Z] Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-    read -p '🌍 Type APP for QUEUE | Type all to restore all apps | Press [ENTER]: ' typed </dev/tty
+    read -p '🌍 Type APP for QUEUE | Type 'all' to restore all apps | Press [ENTER]: ' typed </dev/tty
     clear_lines 17
     
     if [[ "$typed" == "all" || "$typed" == "All" || "$typed" == "ALL" ]]; then restore_all_start; fi
@@ -537,21 +537,20 @@ primaryinterface() {
     initial2
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📁  Vault Interface
+🔒  Vault Interface
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🌵  Disk Used Space: $used of $capacity | $percentage Used Capacity
+Disk Used Space: $used of $capacity | $percentage Used Capacity
 
 [1] Backup your data
 [2] Restore your data
 [3] Change Server ID                    | Current Server ID : $server_id
 [4] Processing Location                 | Current location : $tarlocation
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+__________________________________________________________________________
 [Z] Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-    read -p 'Type a Number | Press [ENTER]: ' typed </dev/tty
+    read -p 'Type a number | Press [ENTER]: ' typed </dev/tty
     clear_lines 15
     
     if [[ "$typed" == "1" ]]; then
@@ -580,7 +579,7 @@ EOF
 restorecheck() {
     if [[ "$restoreid" == "[NOT-SET]" ]]; then
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "⛔️  WARNING! - You Must Set Your Recovery ID First! Restarting Process!"
+        echo "⚠️  WARNING! - You must set your recovery ID first. Restarting process!"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         read -n 1 -s -r -p "Press [ANY] Key to Continue "
         echo
